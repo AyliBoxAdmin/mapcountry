@@ -60,8 +60,9 @@ class MapCountryState extends State<MapCountry> with WidgetsBindingObserver {
 
     asyncInitState();
 
+    /// Scaling icon marker
     Timer.periodic(
-      const Duration(seconds: 2),          // Si pas de changement apres 3 seconde save SQL
+      const Duration(seconds: 2),
           (Timer timer) {
         if (_changeZoom == true) {
           _changeZoom = false;
@@ -136,7 +137,6 @@ class MapCountryState extends State<MapCountry> with WidgetsBindingObserver {
     _googleMapController.dispose();
     super.dispose();
   }
-  ///---------------------------------------------------------------------------
   /// Restore map after app resume
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -178,7 +178,34 @@ class MapCountryState extends State<MapCountry> with WidgetsBindingObserver {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
               children: [
-/*
+                ActionChip(
+                  backgroundColor: _colorScheme.primary,
+                  shadowColor: _colorScheme.secondary,
+                  avatar: Icon(Icons.refresh, color: _colorScheme.onPrimary),
+                  label: Text( "Actualiser", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
+                  labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
+                  labelPadding: const EdgeInsets.all(10.0),
+                  onPressed: () async{
+                    setState(() {
+                      globals.listCountry = [];
+                      _markers.clear();
+                    });
+                    globals.listCountry = await MyApp.getAPI();
+                    await _setMarkerIcon();
+                    setState(() {});
+                  },
+                ),
+                if( globals.useLocalisation == true )
+                  ActionChip(
+                    backgroundColor: _colorScheme.primary,
+                    shadowColor: _colorScheme.secondary,
+                    avatar: Icon(Icons.my_location, color: _colorScheme.onPrimary),
+                    label: Text( "Position", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
+                    labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
+                    labelPadding: const EdgeInsets.all(10.0),
+                    onPressed: _permissionLocation,
+                  ),
+                /*
                 ActionChip(
                   backgroundColor: _colorScheme.primary,
                   shadowColor: _colorScheme.secondary,
@@ -210,36 +237,7 @@ class MapCountryState extends State<MapCountry> with WidgetsBindingObserver {
                     ),
                   ),
                 ),
-*/
-                ActionChip(
-                  backgroundColor: _colorScheme.primary,
-                  shadowColor: _colorScheme.secondary,
-                  avatar: Icon(Icons.refresh, color: _colorScheme.onPrimary),
-                  label: Text( "Actualiser", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
-                  labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
-                  labelPadding: const EdgeInsets.all(10.0),
-                  onPressed: () async{
-                    setState(() {
-                      globals.listCountry = [];
-                      _markers.clear();
-                    });
-                    globals.listCountry = await MyApp.getAPI();
-                    await _setMarkerIcon();
-                    setState(() {});
-                  },
-                ),
-
-              if( globals.useLocalisation == true )
-                ActionChip(
-                  backgroundColor: _colorScheme.primary,
-                  shadowColor: _colorScheme.secondary,
-                  avatar: Icon(Icons.my_location, color: _colorScheme.onPrimary),
-                  label: Text( "Position", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
-                  labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
-                  labelPadding: const EdgeInsets.all(10.0),
-                  onPressed: _permissionLocation,
-                ),
-
+                */
               ],
             ),
           ),
@@ -248,13 +246,9 @@ class MapCountryState extends State<MapCountry> with WidgetsBindingObserver {
       ),
 
 
-
     );
   }
   ///---------------------------------------------------------------------------
-
-
-
   void _addMarker(LatLng pos,{ String name = "" }) async {
     if(name != ""){
       final MarkerId markerId = MarkerId(name);

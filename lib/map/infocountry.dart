@@ -111,17 +111,25 @@ class _InfoCountryState extends State<InfoCountry> { // SingleTickerProviderStat
 
                       const SizedBox(height: 120),
 
+                      TextData(beforeText: "Nom natif: ", setText: widget.thisCountry.nativeName,),
                       TextData(beforeText: "Pays: ", setText: widget.thisCountry.name,),
                       TextData(beforeText: "Capitale: ", setText: widget.thisCountry.capital,),
                       TextData(beforeText: "Région: ", setText: widget.thisCountry.region,),
                       TextData(beforeText: "Sous-région: ", setText: widget.thisCountry.subregion,),
+                      TextData(beforeText: "cioc: ", setText: widget.thisCountry.cioc,),
+                      TextData(beforeText: "Code numérique: ", setText: widget.thisCountry.numericCode.toString(),),
+                      TextData(beforeText: "État indépendant: ", setText: widget.thisCountry.independent! == null || widget.thisCountry.independent! == "null" ? "no data" : widget.thisCountry.independent! == true ? "oui" : "non",),
 
-                      const SizedBox(height: 10),
+                      Divider(height: 20, color: _colorScheme.primary),
+
                       TextData(beforeText: "Population: ", setText: widget.thisCountry.population.toString(),),
-                      TextData(beforeText: "Superficie: ", setText: widget.thisCountry.area.toString(), afterText: " km²",),
+                      TextData(beforeText: "Superficie: ", setText: widget.thisCountry.area.toString(), afterText: " km²"),
+                      TextData(beforeText: "Latitude: ", setText: widget.thisCountry.latlng![0].toString(),),
+                      TextData(beforeText: "Longitude: ", setText: widget.thisCountry.latlng![1].toString(),),
 
-                      const SizedBox(height: 10),
-                      const TextData(beforeText: "devises: "),
+                      Divider(height: 20, color: _colorScheme.primary),
+
+                      const TextData(beforeText: "Devises: "),
                       Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +147,28 @@ class _InfoCountryState extends State<InfoCountry> { // SingleTickerProviderStat
                         ),
                       ),
 
+                      Divider(height: 20, color: _colorScheme.primary),
 
+                      const TextData(beforeText: "Langues: "),
+                      Padding(padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            if(widget.thisCountry.languages != null)
+                              for(final currency in widget.thisCountry.languages!)...[
+                                const SizedBox(height: 10,),
+                                TextData(beforeText: "iso639_1: ",setText: currency!.iso639_1!),
+                                TextData(beforeText: "iso639_2: ",setText: currency.iso639_2!),
+                                TextData(beforeText: "nom: ",setText: currency.name!),
+                                TextData(beforeText: "nom natif: ",setText: currency.nativeName!),
+                              ],
+                            if(widget.thisCountry.languages == null)
+                              const TextData(setText: null),
+                          ],
+                        ),
+                      ),
+
+                      Divider(height: 20, color: _colorScheme.primary),
 
                       const SizedBox(height: 120),
 

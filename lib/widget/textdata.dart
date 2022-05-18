@@ -24,7 +24,9 @@ class TextData extends StatelessWidget {
         style: _textTheme.bodyText2!.copyWith(color: _colorScheme.tertiary),
         text: beforeText,
         children: <TextSpan>[
-          TextSpan(text: setText != null && setText != "null" ? setText : "no data", style: _textTheme.bodyText1!.copyWith(color: _colorScheme.primary),),
+          TextSpan(text: setText != null && setText != "null" ? setText : "no data",
+            style: _textTheme.bodyText1!.copyWith(color: setText != null && setText != "null" ? _colorScheme.primary : _colorScheme.error),
+          ),
           TextSpan(text: afterText),
         ],
       ),

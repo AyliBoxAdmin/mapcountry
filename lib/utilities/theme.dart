@@ -25,17 +25,16 @@ class AppThemeData {
     onPrimary: Color(0xFA212121),
     secondary: Color(0xFFFFD740),
     tertiary: _lightFillColor,  // Text
+    error: Color(0xFF737370),  // Text no data
 
     background: Colors.white,
     onBackground: Color(0xFF9E9E9E),
 
     surface: Color(0xFFFAFBFB),
-    error: _lightFillColor,
     onError: _lightFillColor,
     onSecondary: Color(0xFF322942),
     onSurface: Color(0xFFB3B3B0),
     brightness: Brightness.light,
-
   );
 
   static const ColorScheme darkColorScheme = ColorScheme(
@@ -43,17 +42,16 @@ class AppThemeData {
     onPrimary: Color(0xFA212121),
     secondary: Color(0xFFFFD740),
     tertiary: _darkFillColor,  // Text
+    error: Color(0xFF737370),  // Text no data
 
     background: Color(0xFF151515),
     onBackground: Color(0xFF2A2A2A),
 
     surface: Color(0xFF333331),
-    error: _darkFillColor,
     onError: _darkFillColor,
     onSecondary: _darkFillColor,
     onSurface:  Color(0xFF737370),
     brightness: Brightness.dark,
-
   );
 
   static const _regular = FontWeight.w400;
