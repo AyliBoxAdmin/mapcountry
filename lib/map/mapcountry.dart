@@ -5,12 +5,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+//import 'package:google_maps_flutter_web/google_maps_flutter_web.dart';
+
 import 'package:location/location.dart';
 import 'dart:ui' as ui;
 import 'package:mapcountry/global.dart' as globals;
 
 import '../main.dart';
+import '../utilities/routebuilder.dart';
 import '../utilities/utilities.dart';
+import 'infocountry.dart';
 
 
 class MapCountry extends StatefulWidget {
@@ -21,6 +25,10 @@ class MapCountry extends StatefulWidget {
 }
 
 class MapCountryState extends State<MapCountry> {
+
+  late ThemeData _theme;
+  late TextTheme _textTheme;
+  late ColorScheme _colorScheme;
 
   late GoogleMapController _googleMapController;
   BitmapDescriptor? _markerIcon;
@@ -63,65 +71,27 @@ class MapCountryState extends State<MapCountry> {
 
   }
   void asyncInitState() async {
-    globals.listCountry = await HomePage.getAPI();
+    globals.listCountry = await MyApp.getAPI();
     await _setMarkerIcon();
-    await _permissionLocation();
+
+    if( globals.useLocalisation == true ) {
+      await _permissionLocation();
+    }
   }
   Future _setMarkerIcon() async {
     /// Icons by assets folder
-    final Uint8List markerIcon = await getBytesFromAsset('assets/country.png', toolsRangeValue(_currentZoom, 3,20,50,300 ).toInt() ); /// Size
+    final Uint8List markerIcon = await getBytesFromAsset('assets/country.png', toolsScalingValue(_currentZoom, 3,20,50,300 ).toInt() ); /// Size
     _markerIcon = BitmapDescriptor.fromBytes(markerIcon);
-    /// Icons by Network
-    /*
-    String imgurl = "https://www.asyoulikekit.com/api_HHM/country.png";
-    Uint8List bytes = (await NetworkAssetBundle(Uri.parse(imgurl))
-        .load(imgurl))
-        .buffer
-        .asUint8List();
-    _markerIcon = BitmapDescriptor.fromBytes(bytes);*/
-    /// Icons by Canvas
-    //final Uint8List markerIcon = await getBytesFromCanvas(200, 100);
-    //_markerIcon = BitmapDescriptor.fromBytes(markerIcon);
 
-    /// Add All Markers
+    /// Add all Markers
     _markers.clear();
-    //globals.listCountry = await HomePage.getAPI();
+    //globals.listCountry = await MyApp.getAPI();
     for(int i = 0; i<globals.listCountry.length; i++){
       if( globals.listCountry[i].latlng != null && globals.listCountry[i].latlng!.length == 2 ) {
         _addMarker(LatLng(globals.listCountry[i].latlng![0], globals.listCountry[i].latlng![1]), name: globals.listCountry[i].name );
       }
     }
   }
-  /// Icons by Canvas
-  Future<Uint8List> getBytesFromCanvas(int width, int height) async {
-    final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
-    final Canvas canvas = Canvas(pictureRecorder);
-    final Paint paint = Paint()..color = Colors.blue;
-    const Radius radius = Radius.circular(20.0);
-    canvas.drawRRect(
-        RRect.fromRectAndCorners(
-          Rect.fromLTWH(0.0, 0.0, width.toDouble(), height.toDouble()),
-          topLeft: radius,
-          topRight: radius,
-          bottomLeft: radius,
-          bottomRight: radius,
-        ),
-        paint);
-    TextPainter painter = TextPainter(textDirection: TextDirection.ltr);
-    painter.text = const TextSpan(
-      text: 'Belgique',
-      style: TextStyle(fontSize: 25.0, color: Colors.white),
-      children: [
-        TextSpan(text: "...", ),
-      ],
-    );
-    painter.layout();
-    painter.paint(canvas, Offset((width * 0.5) - painter.width * 0.5, (height * 0.5) - painter.height * 0.5));
-    final img = await pictureRecorder.endRecording().toImage(width, height);
-    final data = await img.toByteData(format: ui.ImageByteFormat.png);
-    return data!.buffer.asUint8List();
-  }
-
 
   Future _permissionLocation() async {
     Location location = Location();
@@ -166,13 +136,17 @@ class MapCountryState extends State<MapCountry> {
   ///---------------------------------------------------------------------------
   @override
   Widget build(BuildContext context) {
+    _theme = Theme.of(context);
+    _textTheme = _theme.textTheme;
+    _colorScheme = _theme.colorScheme;
+
     return Scaffold(
       body: Stack(
         children: [
           GoogleMap(
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
-            zoomControlsEnabled: true,
+            zoomControlsEnabled: false,
             zoomGesturesEnabled: true,
             mapType: MapType.normal,
             initialCameraPosition: _initialCameraPosition,
@@ -184,7 +158,6 @@ class MapCountryState extends State<MapCountry> {
                 _changeZoom = true;
               }
             },
-
           ),
 
           Container(
@@ -196,10 +169,10 @@ class MapCountryState extends State<MapCountry> {
               children: [
 /*
                 ActionChip(
-                  backgroundColor: Colors.amber,
-                  shadowColor: Colors.amberAccent,
-                  avatar: const Icon(Icons.delete),
-                  label: Text( "Delete", style: Theme.of(context).textTheme.bodyText2, ),
+                  backgroundColor: _colorScheme.primary,
+                  shadowColor: _colorScheme.secondary,
+                  avatar: Icon(Icons.delete, color: _colorScheme.onPrimary),
+                  label: Text( "Delete", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
                   labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
                   labelPadding: const EdgeInsets.all(10.0),
                   onPressed: () async{
@@ -210,10 +183,10 @@ class MapCountryState extends State<MapCountry> {
                   },
                 ),
                 ActionChip(
-                  backgroundColor: Colors.amber,
-                  shadowColor: Colors.amberAccent,
-                  avatar: const Icon(Icons.highlight_remove_outlined),
-                  label: Text( "Move", style: Theme.of(context).textTheme.bodyText2, ),
+                  backgroundColor: _colorScheme.primary,
+                  shadowColor: _colorScheme.secondary,
+                  avatar: Icon(Icons.highlight_remove_outlined, color: _colorScheme.onPrimary),
+                  label: Text( "Move", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
                   labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
                   labelPadding: const EdgeInsets.all(10.0),
                   onPressed: () => _googleMapController.animateCamera(
@@ -228,10 +201,10 @@ class MapCountryState extends State<MapCountry> {
                 ),
 */
                 ActionChip(
-                  backgroundColor: Colors.amber,
-                  shadowColor: Colors.amberAccent,
-                  avatar: const Icon(Icons.refresh),
-                  label: Text( "Refresh", style: Theme.of(context).textTheme.bodyText2, ),
+                  backgroundColor: _colorScheme.primary,
+                  shadowColor: _colorScheme.secondary,
+                  avatar: Icon(Icons.refresh, color: _colorScheme.onPrimary),
+                  label: Text( "Actualiser", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
                   labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
                   labelPadding: const EdgeInsets.all(10.0),
                   onPressed: () async{
@@ -239,16 +212,18 @@ class MapCountryState extends State<MapCountry> {
                       globals.listCountry = [];
                       _markers.clear();
                     });
-                    globals.listCountry = await HomePage.getAPI();
+                    globals.listCountry = await MyApp.getAPI();
                     await _setMarkerIcon();
                     setState(() {});
                   },
                 ),
+
+              if( globals.useLocalisation == true )
                 ActionChip(
-                  backgroundColor: Colors.amber,
-                  shadowColor: Colors.amberAccent,
-                  avatar: const Icon(Icons.my_location),
-                  label: Text( "Location", style: Theme.of(context).textTheme.bodyText2, ),
+                  backgroundColor: _colorScheme.primary,
+                  shadowColor: _colorScheme.secondary,
+                  avatar: Icon(Icons.my_location, color: _colorScheme.onPrimary),
+                  label: Text( "Position", style: _textTheme.bodyText2!.copyWith(color: _colorScheme.onPrimary) ),
                   labelStyle: const TextStyle(color: Colors.black, fontStyle: FontStyle.italic),
                   labelPadding: const EdgeInsets.all(10.0),
                   onPressed: _permissionLocation,
@@ -269,11 +244,9 @@ class MapCountryState extends State<MapCountry> {
 
 
 
-  void _addMarker(LatLng pos,{  String name = "" }) async {
+  void _addMarker(LatLng pos,{ String name = "" }) async {
     if(name != ""){
-      var markerIdVal = name;
-      final MarkerId markerId = MarkerId(markerIdVal.toString());
-      // creating a new MARKER
+      final MarkerId markerId = MarkerId(name);
       final Marker marker = Marker(
         markerId: markerId,
         position: pos,
@@ -281,8 +254,20 @@ class MapCountryState extends State<MapCountry> {
         icon: _markerIcon!,
         infoWindow: InfoWindow(
           title: name,
-          //snippet: "${_markersId.toString()}",
+          //snippet: markerId.toString(),
         ),
+        onTap: () {
+          final index = globals.listCountry.indexWhere((element) => element.name == name);
+          if (index >= 0) {
+            Navigator.push( // push or pushReplacement
+              context,
+              ZoomInRoute(  // FadeInRoute  // ZoomInRoute  // RotationInRoute
+                page: InfoCountry( thisCountry: globals.listCountry[index] ),
+                routeName: "/info",
+              ),
+            );
+          }
+        },
       );
       setState(() {
         _markers.add(marker);

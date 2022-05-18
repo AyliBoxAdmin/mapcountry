@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 //Navigator.push(context, MaterialPageRoute(builder: (context) => ContactScreen()));
 /* // NICKEL SANS ANIMATION
-                Navigator.push(
+                Navigator.push( // push or pushReplacement
                     context,
                     PageRouteBuilder(
                         pageBuilder: (BuildContext context,
@@ -34,9 +34,6 @@ page: MyHomeScreen(),
 
 class FadeInRoute extends PageRouteBuilder {
   final Widget page;
-
-  /// UPDATE DATE USER STATUT POUR OUVERTURE AUTOMATIQUE SUR BONNE VIEW
-
   FadeInRoute({required this.page, required String routeName})
       : super(
     settings: RouteSettings(name: routeName),            // set name here
@@ -87,7 +84,6 @@ class FadeInRoute extends PageRouteBuilder {
           ));*/
 class ZoomInRoute extends PageRouteBuilder {
   final Widget page;
-
   ZoomInRoute({required this.page, required String routeName})
       : super(
     settings: RouteSettings(name: routeName),            // set name here
@@ -140,7 +136,6 @@ class ZoomInRoute extends PageRouteBuilder {
         ));*/
 class RotationInRoute extends PageRouteBuilder {
   final Widget page;
-
   RotationInRoute({required this.page, required String routeName})
       : super(
     settings: RouteSettings(name: routeName),            // set name here

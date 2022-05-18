@@ -16,6 +16,10 @@ double screenWidth = 0;// 1920;
 double screenHeight = 0;// 1080;
 
 
+bool useLocalisation = true;
+
+
+
 List<Country> listCountry = [];
 
 

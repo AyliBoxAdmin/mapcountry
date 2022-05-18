@@ -1,40 +1,24 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:mapcountry/utilities/theme.dart';
 import 'data/country.dart';
 import 'map/mapcountry.dart';
 import 'package:http/http.dart' as http;
 import 'package:mapcountry/global.dart' as globals;
-
 
 void main() {
   /// For SplashScreen
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  runApp(const MyApp());
+  runApp(const MyApp(title: 'MapCountry'));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MapCountry',
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
-      ),
-      home: const HomePage(title: 'MapCountry'),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key, required this.title}) : super(key: key);
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -52,12 +36,11 @@ class HomePage extends StatefulWidget {
   }
   ///---------------------------------------------------------------------------
 
-
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<MyApp> createState() => _MyAppState();
 }
 
-class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   ///---------------------------------------------------------------------------
   /// Controle Orientation
@@ -96,14 +79,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     asyncMethod();
   }
-
   void asyncMethod() async {
     await iniAPPorWeb();
-    //globals.listCountry = await HomePage.getAPI();
+    //globals.listCountry = await MyApp.getAPI();
     /// For SplashScreen
     removeSplash();
   }
-
   Future iniAPPorWeb() async {
     if (kIsWeb) {
       globals.isWeb = true;
@@ -121,7 +102,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
     return true;
   }
-  ///---------------------------------------------------------------------------
   /// For SplashScreen
   void removeSplash() async {
     await Future.delayed(const Duration(milliseconds: 1000), () async{
@@ -135,9 +115,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'MapCountry',
-      theme: ThemeData(
-        primarySwatch: Colors.amber,
-      ),
+
+      themeMode: ThemeMode.system,
+      theme: AppThemeData.lightThemeData,
+      darkTheme: AppThemeData.darkThemeData,
       home: const MapCountry(),
     );
   }
