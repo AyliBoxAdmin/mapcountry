@@ -24,7 +24,7 @@ class MapCountry extends StatefulWidget {
   State<MapCountry> createState() => MapCountryState();
 }
 
-class MapCountryState extends State<MapCountry> {
+class MapCountryState extends State<MapCountry> with WidgetsBindingObserver {
 
   late ThemeData _theme;
   late TextTheme _textTheme;
@@ -55,6 +55,9 @@ class MapCountryState extends State<MapCountry> {
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance!.addObserver(this);
+
     asyncInitState();
 
     Timer.periodic(
@@ -132,6 +135,14 @@ class MapCountryState extends State<MapCountry> {
   void dispose() {
     _googleMapController.dispose();
     super.dispose();
+  }
+  ///---------------------------------------------------------------------------
+  /// Restore map after app resume
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _googleMapController.setMapStyle("[]");
+    }
   }
   ///---------------------------------------------------------------------------
   @override
