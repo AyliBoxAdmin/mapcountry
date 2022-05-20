@@ -25,14 +25,14 @@ class AppThemeData {
     onPrimary: Color(0xFA212121),
     secondary: Color(0xFFFFD740),
     tertiary: _lightFillColor,  // Text
-    error: Color(0xFF737370),  // Text no data
+    error: Color(0xFF737370),   // Text no data
 
     background: Colors.white,
     onBackground: Color(0xFF9E9E9E),
 
     surface: Color(0xFFFAFBFB),
     onError: _lightFillColor,
-    onSecondary: Color(0xFF322942),
+    onSecondary: Color(0xFFB3B3B0),
     onSurface: Color(0xFFB3B3B0),
     brightness: Brightness.light,
   );

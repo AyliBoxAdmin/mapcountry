@@ -155,12 +155,12 @@ class _InfoCountryState extends State<InfoCountry> { // SingleTickerProviderStat
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             if(widget.thisCountry.languages != null)
-                              for(final currency in widget.thisCountry.languages!)...[
+                              for(final language in widget.thisCountry.languages!)...[
                                 const SizedBox(height: 10,),
-                                TextData(beforeText: "iso639_1: ",setText: currency!.iso639_1!),
-                                TextData(beforeText: "iso639_2: ",setText: currency.iso639_2!),
-                                TextData(beforeText: "nom: ",setText: currency.name!),
-                                TextData(beforeText: "nom natif: ",setText: currency.nativeName!),
+                                TextData(beforeText: "iso639_1: ",setText: language!.iso639_1),
+                                TextData(beforeText: "iso639_2: ",setText: language.iso639_2),
+                                TextData(beforeText: "nom: ",setText: language.name),
+                                TextData(beforeText: "nom natif: ",setText: language.nativeName),
                               ],
                             if(widget.thisCountry.languages == null)
                               const TextData(setText: null),
@@ -204,17 +204,5 @@ class _InfoCountryState extends State<InfoCountry> { // SingleTickerProviderStat
       ),
     );
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
